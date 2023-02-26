@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, unnecessary_new
+
 import 'package:flutter/material.dart';
 
 void main() => runApp(new MyApp());
@@ -25,7 +27,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   String output = "0";
 
   String _output = "0";
@@ -33,78 +34,79 @@ class _MyHomePageState extends State<MyHomePage> {
   double num2 = 0.0;
   String operand = "";
 
-  buttonPressed(String buttonText){
-
-    if (buttonText == "+" || buttonText == "-" || buttonText == ":" || buttonText == "X"){
-
+  buttonPressed(String buttonText) {
+    if (buttonText == "+" ||
+        buttonText == "-" ||
+        buttonText == ":" ||
+        buttonText == "X") {
       num1 = double.parse(output);
 
       operand = buttonText;
 
       _output = "0";
-
-    } else if(buttonText == "."){
-
-      if(_output.contains(".")){
+    } else if (buttonText == ".") {
+      if (_output.contains(".")) {
         print("So thap phan");
         return;
-
       } else {
         _output = _output + buttonText;
       }
-
-    } else if (buttonText == "="){
-
+    } else if (buttonText == "=") {
       num2 = double.parse(output);
 
-      if(operand == "+"){
+      if (operand == "+") {
         _output = (num1 + num2).toString();
       }
-      if(operand == "-"){
+      if (operand == "-") {
         _output = (num1 - num2).toString();
       }
-      if(operand == "X"){
+      if (operand == "X") {
         _output = (num1 * num2).toString();
       }
-      if(operand == ":"){
+      if (operand == ":") {
         _output = (num1 / num2).toString();
       }
 
       num1 = 0.0;
       num2 = 0.0;
       operand = "";
-
+    } else if (buttonText == "C") {
+      _output = "\n0";
+      output = "0";
+      num1 = 0.0;
+      num2 = 0.0;
+      operand = "";
     } else {
-
       _output = _output + buttonText;
-
     }
 
     print(_output);
 
     setState(() {
-
       output = double.parse(_output).toStringAsFixed(2);
-
     });
-
   }
 
-  Widget buildButton(String buttonText) {
+  Widget buildButton(String buttonText, String bcolor) {
+    var cMap = {
+      "orange": Colors.orange,
+      "red": Colors.red,
+      "blue": Colors.blue
+    };
+
+    var co = cMap[bcolor];
     return new Expanded(
       child: new OutlinedButton(
         style: OutlinedButton.styleFrom(
-         padding: const EdgeInsets.all(24.0),
+          backgroundColor: co,
+          padding: const EdgeInsets.all(24.0),
         ),
-        child: new Text(buttonText,
-          style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold
-          ),
+        child: new Text(
+          buttonText,
+          style: const TextStyle(
+              fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        onPressed: () =>
-            buttonPressed(buttonText)
-        ,
+        onPressed: () => buttonPressed(buttonText),
       ),
     );
   }
@@ -115,55 +117,48 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: new AppBar(
           title: new Text(widget.title),
         ),
-        body: new Container(
-            child: new Column(
-              children: <Widget>[
-                new Container(
-                    alignment: Alignment.centerRight,
-                    padding: new EdgeInsets.symmetric(
-                        vertical: 24.0,
-                        horizontal: 12.0
-                    ),
-                    child: new Text(output, style: new TextStyle(
+        body: new Column(
+          children: <Widget>[
+            new Container(
+                alignment: Alignment.centerRight,
+                padding:
+                    new EdgeInsets.symmetric(vertical: 24.0, horizontal: 12.0),
+                child: new Text(output,
+                    style: new TextStyle(
                       fontSize: 48.0,
                       fontWeight: FontWeight.bold,
-
                     ))),
-                new Expanded(
-                  child: new Divider(),
-                ),
-
-
-                new Column(children: [
-                  new Row(children: [
-                    buildButton("7"),
-                    buildButton("8"),
-                    buildButton("9"),
-                    buildButton(":")
-                  ]),
-
-                  new Row(children: [
-                    buildButton("4"),
-                    buildButton("5"),
-                    buildButton("6"),
-                    buildButton("X")
-                  ]),
-
-                  new Row(children: [
-                    buildButton("1"),
-                    buildButton("2"),
-                    buildButton("3"),
-                    buildButton("-")
-                  ]),
-
-                  new Row(children: [
-                    buildButton("0"),
-                    buildButton("."),
-                    buildButton("="),
-                    buildButton("+")
-                  ]),
-                ])
-              ],
-            )));
+            new Expanded(
+              child: new Divider(),
+            ),
+            new Column(children: [
+              Row(children: [buildButton("C", "orange")]),
+              new Row(children: [
+                buildButton("7", "blue"),
+                buildButton("8", "blue"),
+                buildButton("9", "blue"),
+                buildButton(":", "red")
+              ]),
+              new Row(children: [
+                buildButton("4", "blue"),
+                buildButton("5", "blue"),
+                buildButton("6", "blue"),
+                buildButton("X", "red")
+              ]),
+              new Row(children: [
+                buildButton("1", "blue"),
+                buildButton("2", "blue"),
+                buildButton("3", "blue"),
+                buildButton("-", "red")
+              ]),
+              new Row(children: [
+                buildButton("0", "blue"),
+                buildButton(".", "red"),
+                buildButton("=", "red"),
+                buildButton("+", "red")
+              ]),
+            ])
+          ],
+        ));
   }
 }
